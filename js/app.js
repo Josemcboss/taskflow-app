@@ -71,6 +71,11 @@ async function init() {
         renderCategoryFilters();
     };
 
+    // Initialize sharing manager BEFORE loading todos (needed by renderTodos)
+    sharingManager = new SharingManager(supabase, currentUser.id);
+    sharingManager.userEmail = currentUser.email;
+    await sharingManager.init();
+
     // Load todos
     await loadTodos();
     
@@ -82,11 +87,6 @@ async function init() {
     notificationsManager = new NotificationsManager();
     await notificationsManager.init();
     updateNotificationsButton();
-    
-    // Initialize sharing manager
-    sharingManager = new SharingManager(supabase, currentUser.id);
-    sharingManager.userEmail = currentUser.email;
-    await sharingManager.init();
     
     // Initialize export manager
     exportManager = new ExportManager(supabase, currentUser.id);
@@ -659,10 +659,10 @@ function renderTodos() {
                         onclick="startAddSubtask(${todo.id})" 
                         title="Agregar subtarea">+</button>
               ` : ''}
-              <button class="btn-share-task ${sharingManager.isShared(todo.id) ? 'shared' : ''}" 
+              <button class="btn-share-task ${sharingManager && sharingManager.isShared(todo.id) ? 'shared' : ''}" 
                       onclick="openShareModal(${todo.id}, '${escapeHtml(todo.text).replace(/'/g, "\\'")}')" 
                       title="Compartir tarea">
-                🔗${sharingManager.isShared(todo.id) ? ` (${sharingManager.getSharedCount(todo.id)})` : ''}
+                🔗${sharingManager && sharingManager.isShared(todo.id) ? ` (${sharingManager.getSharedCount(todo.id)})` : ''}
               </button>
               <button class="btn-icon btn-edit" onclick="startEdit(${todo.id})" title="Editar">✎</button>
               <button class="btn-icon btn-delete" onclick="deleteTodo(${todo.id})" title="Eliminar">🗑</button>

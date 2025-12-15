@@ -129,27 +129,31 @@ class SharingManager {
         addShareBtn.disabled = true;
         addShareBtn.textContent = 'Compartiendo...';
 
+        // Note: Feature temporarily disabled - requires RPC function
+        // TODO: Create Supabase RPC function: get_user_id_by_email
+        alert('⚠️ La funcionalidad de compartir tareas está temporalmente deshabilitada.\n\nRequiere configuración adicional en el servidor (función RPC en Supabase).');
+        
+        addShareBtn.disabled = false;
+        addShareBtn.textContent = 'Compartir';
+        
+        /* Uncomment when RPC function is ready:
+        
         try {
-            // Check if user exists
-            const { data: userData, error: userError } = await this.supabase
-                .from('user_profiles')
-                .select('id')
-                .eq('email', email)
-                .single();
+            // Get user ID by email using RPC function
+            const { data: userId, error: userError } = await this.supabase
+                .rpc('get_user_id_by_email', { user_email: email });
 
-            if (userError || !userData) {
+            if (userError || !userId) {
                 alert('No se encontró un usuario con ese email');
                 return;
             }
-
-            const sharedWithId = userData.id;
 
             // Check if already shared
             const { data: existing } = await this.supabase
                 .from('shared_todos')
                 .select('id')
                 .eq('todo_id', this.currentTodoId)
-                .eq('shared_with_user_id', sharedWithId)
+                .eq('shared_with', userId)
                 .single();
 
             if (existing) {
@@ -162,8 +166,8 @@ class SharingManager {
                 .from('shared_todos')
                 .insert([{
                     todo_id: this.currentTodoId,
-                    shared_by_user_id: this.userId,
-                    shared_with_user_id: sharedWithId,
+                    shared_by: this.userId,
+                    shared_with: userId,
                     permission: permission
                 }]);
 
@@ -185,28 +189,35 @@ class SharingManager {
             addShareBtn.disabled = false;
             addShareBtn.textContent = 'Compartir';
         }
+        */
     }
 
     async loadSharesForTask(todoId) {
         try {
-            const { data, error } = await this.supabase
+            // Get shares for this task
+            const { data: sharesData, error } = await this.supabase
                 .from('shared_todos')
-                .select(`
-                    id,
-                    permission,
-                    created_at,
-                    shared_with_user_id,
-                    user_profiles!shared_todos_shared_with_user_id_fkey (
-                        display_name,
-                        avatar_url
-                    )
-                `)
+                .select('id, permission, created_at, shared_with')
                 .eq('todo_id', todoId)
-                .eq('shared_by_user_id', this.userId);
+                .eq('shared_by', this.userId);
 
             if (error) throw error;
 
-            this.renderSharedUsers(data || []);
+            // Get user profiles for each share
+            const data = await Promise.all((sharesData || []).map(async (share) => {
+                const { data: profileData } = await this.supabase
+                    .from('user_profiles')
+                    .select('display_name, avatar_url')
+                    .eq('id', share.shared_with)
+                    .single();
+                
+                return {
+                    ...share,
+                    user_profiles: profileData
+                };
+            }));
+
+            this.renderSharedUsers(data);
 
         } catch (error) {
             console.error('Error loading shares:', error);
@@ -277,8 +288,8 @@ class SharingManager {
             // Load tasks I've shared
             const { data, error } = await this.supabase
                 .from('shared_todos')
-                .select('todo_id, shared_with_user_id')
-                .eq('shared_by_user_id', this.userId);
+                .select('todo_id, shared_with')
+                .eq('shared_by', this.userId);
 
             if (error) throw error;
 
@@ -288,7 +299,7 @@ class SharingManager {
                 if (!this.sharedTasks.has(share.todo_id)) {
                     this.sharedTasks.set(share.todo_id, []);
                 }
-                this.sharedTasks.get(share.todo_id).push(share.shared_with_user_id);
+                this.sharedTasks.get(share.todo_id).push(share.shared_with);
             });
 
         } catch (error) {
