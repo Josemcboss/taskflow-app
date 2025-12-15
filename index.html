@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow - Iniciar Sesión</title>
+  <meta name="description" content="Organiza tu vida con TaskFlow - La aplicación de tareas más moderna y elegante">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">✓</div>
+        <h1 class="auth-title" id="authTitle">Bienvenido de vuelta</h1>
+        <p class="auth-subtitle" id="authSubtitle">Inicia sesión para continuar con tus tareas</p>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail" class="form-label">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            class="form-input" 
+            placeholder="tu@email.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword" class="form-label">Contraseña</label>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            class="form-input" 
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="registerForm" class="form-hidden">
+        <div class="form-group">
+          <label for="registerEmail" class="form-label">Correo electrónico</label>
+          <input 
+            type="email" 
+            id="registerEmail" 
+            class="form-input" 
+            placeholder="tu@email.com"
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerPassword" class="form-label">Contraseña</label>
+          <input 
+            type="password" 
+            id="registerPassword" 
+            class="form-input" 
+            placeholder="Mínimo 6 caracteres"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="registerPasswordConfirm" class="form-label">Confirmar Contraseña</label>
+          <input 
+            type="password" 
+            id="registerPasswordConfirm" 
+            class="form-input" 
+            placeholder="Repite tu contraseña"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="registerBtn">
+          Crear Cuenta
+        </button>
+      </form>
+
+      <div class="divider">o</div>
+
+      <div class="auth-switch">
+        <span id="switchText">¿No tienes una cuenta?</span>
+        <a class="auth-switch-link" id="switchLink">Regístrate</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

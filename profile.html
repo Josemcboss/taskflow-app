@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - TaskFlow</title>
+    <meta name="description" content="Perfil de usuario en TaskFlow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/app.css">
+    <link rel="stylesheet" href="styles/profile.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="app-logo">✓</div>
+                <h1 class="app-title">Mi Perfil</h1>
+            </div>
+            <div class="user-info">
+                <a href="app.html" class="btn-back">← Volver a Tareas</a>
+                <button class="btn-logout" id="logoutBtn">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <!-- Profile Container -->
+        <div class="profile-container">
+            <!-- Avatar Section -->
+            <section class="profile-avatar-section">
+                <div class="avatar-container">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <div class="avatar-placeholder">👤</div>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    <button class="btn-upload-avatar" id="uploadAvatarBtn">Cambiar Avatar</button>
+                    <button class="btn-remove-avatar" id="removeAvatarBtn" style="display: none;">Eliminar</button>
+                </div>
+            </section>
+
+            <!-- Profile Info -->
+            <section class="profile-info-section">
+                <h2>Información Personal</h2>
+                <div class="profile-form">
+                    <div class="form-group">
+                        <label for="displayName">Nombre para mostrar</label>
+                        <input type="text" id="displayName" class="form-input" placeholder="Ingresa tu nombre" maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-input" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bio">Biografía</label>
+                        <textarea id="bio" class="form-textarea" placeholder="Cuéntanos sobre ti..." maxlength="500" rows="4"></textarea>
+                        <div class="char-counter-bio">
+                            <span id="bioCharCount">0</span>/500 caracteres
+                        </div>
+                    </div>
+
+                    <button class="btn-save-profile" id="saveProfileBtn">Guardar Cambios</button>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="profile-stats-section">
+                <h2>📊 Mis Estadísticas</h2>
+                <div class="stats-grid">
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statTotalTasks">0</div>
+                            <div class="stat-label">Total de Tareas</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statCompletedTasks">0</div>
+                            <div class="stat-label">Completadas</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">⏳</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statActiveTasks">0</div>
+                            <div class="stat-label">Activas</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statHighPriority">0</div>
+                            <div class="stat-label">Alta Prioridad</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statOverdueTasks">0</div>
+                            <div class="stat-label">Vencidas</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-profile">
+                        <div class="stat-icon">📁</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="statCategories">0</div>
+                            <div class="stat-label">Categorías</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preferences Section -->
+            <section class="profile-preferences-section">
+                <h2>⚙️ Preferencias</h2>
+                <div class="preferences-list">
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <div class="preference-title">🔔 Notificaciones del Navegador</div>
+                            <div class="preference-description">Recibir alertas de tareas próximas a vencer</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <div class="preference-title">📧 Recordatorios por Email</div>
+                            <div class="preference-description">Recibir emails con recordatorios de tareas</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="emailRemindersToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="preference-item">
+                        <div class="preference-info">
+                            <div class="preference-title">🎨 Tema</div>
+                            <div class="preference-description">Personaliza el aspecto de la aplicación</div>
+                        </div>
+                        <select id="themeSelect" class="preference-select">
+                            <option value="dark">🌙 Oscuro</option>
+                            <option value="light">☀️ Claro (Próximamente)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Account Info -->
+            <section class="profile-account-section">
+                <h2>ℹ️ Información de la Cuenta</h2>
+                <div class="account-info">
+                    <div class="account-info-item">
+                        <span class="account-label">Miembro desde:</span>
+                        <span class="account-value" id="memberSince">-</span>
+                    </div>
+                    <div class="account-info-item">
+                        <span class="account-label">Última actualización:</span>
+                        <span class="account-value" id="lastUpdated">-</span>
+                    </div>
+                    <div class="account-info-item">
+                        <span class="account-label">ID de Usuario:</span>
+                        <span class="account-value account-id" id="userId">-</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+
+</html>
