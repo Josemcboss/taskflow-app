@@ -48,12 +48,20 @@ if (document.readyState === 'loading') {
 }
 
 function initApp() {
+    // Intentar inicializar supabase si no está listo
+    if (!supabase && typeof initializeSupabase === 'function') {
+        console.log('Intentando inicializar Supabase en app.js...');
+        initializeSupabase();
+    }
+    
     // Verificar que supabase esté inicializado
     if (!supabase || !supabase.auth) {
         console.error('Supabase no está inicializado. Reintentando en 500ms...');
         setTimeout(initApp, 500);
         return;
     }
+    
+    console.log('✅ Supabase listo en app.js');
     init();
 }
 
