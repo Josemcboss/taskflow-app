@@ -16,9 +16,18 @@ let isLoginMode = true;
 checkAuth();
 
 async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-        window.location.href = 'app.html';
+    if (!supabase || !supabase.auth) {
+        console.error('Supabase client not initialized');
+        return;
+    }
+    
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            window.location.href = 'app.html';
+        }
+    } catch (error) {
+        console.error('Error checking auth:', error);
     }
 }
 
@@ -63,6 +72,14 @@ loginForm.addEventListener('submit', async (e) => {
     const originalText = loginBtn.innerHTML;
     loginBtn.disabled = true;
     loginBtn.innerHTML = 'Iniciando sesión<span class="spinner"></span>';
+
+    // Validar que supabase esté inicializado
+    if (!supabase || !supabase.auth) {
+        showError('Error: Supabase no está inicializado correctamente');
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = originalText;
+        return;
+    }
 
     try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -113,6 +130,14 @@ registerForm.addEventListener('submit', async (e) => {
     const originalText = registerBtn.innerHTML;
     registerBtn.disabled = true;
     registerBtn.innerHTML = 'Creando cuenta<span class="spinner"></span>';
+
+    // Validar que supabase esté inicializado
+    if (!supabase || !supabase.auth) {
+        showError('Error: Supabase no está inicializado correctamente');
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = originalText;
+        return;
+    }
 
     try {
         const { data, error } = await supabase.auth.signUp({
