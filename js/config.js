@@ -9,20 +9,23 @@
 const SUPABASE_URL = 'https://mxbzhyffmoijttoexjpq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14YnpoeWZmbW9panR0b2V4anBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3Mzc1MTIsImV4cCI6MjA4MTMxMzUxMn0.1PS46_1geUl38uI471P-PUTr8Y6hvTmhCqLa97JIhLY'; // Reemplaza con tu anon/public key de Supabase
 
-// Initialize Supabase client
-let supabase;
+// Initialize Supabase client (evitar redeclaración)
+var supabase;
 
-// Esperar a que la librería de Supabase esté cargada
-if (typeof window.supabase === 'undefined') {
-  console.error('⚠️ ERROR CRÍTICO: Supabase JS library not loaded!');
-  console.error('Asegúrate de incluir: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>');
-  console.error('ANTES de <script src="js/config.js"></script>');
-} else {
-  try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('✅ Supabase client initialized successfully');
-  } catch (error) {
-    console.error('❌ Error initializing Supabase client:', error);
+// Solo inicializar si no existe ya
+if (typeof supabase === 'undefined' || !supabase) {
+  // Verificar que la librería de Supabase esté cargada
+  if (typeof window.supabase === 'undefined') {
+    console.error('⚠️ ERROR CRÍTICO: Supabase JS library not loaded!');
+    console.error('Asegúrate de incluir: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>');
+    console.error('ANTES de <script src="js/config.js"></script>');
+  } else {
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✅ Supabase client initialized successfully');
+    } catch (error) {
+      console.error('❌ Error initializing Supabase client:', error);
+    }
   }
 }
 

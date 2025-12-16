@@ -12,15 +12,24 @@ const successMessage = document.getElementById('successMessage');
 
 let isLoginMode = true;
 
-// Check if user is already logged in
-checkAuth();
+// Check if user is already logged in (esperar a que supabase esté listo)
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuth);
+} else {
+    initAuth();
+}
 
-async function checkAuth() {
+function initAuth() {
+    // Verificar que supabase esté inicializado
     if (!supabase || !supabase.auth) {
-        console.error('Supabase client not initialized');
+        console.log('Esperando a que Supabase se inicialice...');
+        setTimeout(initAuth, 100);
         return;
     }
-    
+    checkAuth();
+}
+
+async function checkAuth() {
     try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {

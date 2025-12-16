@@ -40,8 +40,22 @@ let addingSubtaskToId = null; // Track which todo is having a subtask added
 let notesEditorVisible = false;
 let pendingAttachments = []; // Files to upload when task is created
 
-// Initialize app
-init();
+// Initialize app when DOM and Supabase are ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
+
+function initApp() {
+    // Verificar que supabase esté inicializado
+    if (!supabase || !supabase.auth) {
+        console.error('Supabase no está inicializado. Reintentando en 500ms...');
+        setTimeout(initApp, 500);
+        return;
+    }
+    init();
+}
 
 async function init() {
     // Check authentication
